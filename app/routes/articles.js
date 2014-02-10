@@ -14,9 +14,10 @@ var hasAuthorization = function(req, res, next) {
 
 module.exports = function(app) {
 
-    app.get('/articles', articles.all);
+    app.get('/articles', authorization.requiresLogin, articles.showByUser);
+    app.get('/articles/all', articles.all);
     app.post('/articles', authorization.requiresLogin, articles.create);
-    app.get('/articles/:articleId', articles.show);
+    app.get('/articles/:articleId', hasAuthorization, articles.show);
     app.put('/articles/:articleId', authorization.requiresLogin, hasAuthorization, articles.update);
     app.del('/articles/:articleId', authorization.requiresLogin, hasAuthorization, articles.destroy);
 

@@ -85,6 +85,22 @@ exports.show = function(req, res) {
 };
 
 /**
+ * Show only articles owned by the logged user
+ */
+exports.showByUser = function(req, res) {
+    Article.find().sort('-created').where('user').equals(req.user.id).populate('user', 'name username').exec(function(err, articles) {
+        if (err) {
+            res.render('error', {
+                status: 500
+            });
+        } else {
+            res.jsonp(articles);
+        }
+    });
+};
+
+
+/**
  * List of Articles
  */
 exports.all = function(req, res) {
